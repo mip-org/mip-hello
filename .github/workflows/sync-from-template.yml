@@ -1,0 +1,89 @@
+name: Sync from mip-channel-template
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Every Monday at 9:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout channel repo
+        uses: actions/checkout@v4
+
+      - name: Fetch latest template
+        run: |
+          git clone --depth 1 https://github.com/mip-org/mip-channel-template.git /tmp/template
+
+      - name: Copy shared files from template
+        run: |
+          # Sync scripts/ directory
+          rm -rf scripts
+          cp -r /tmp/template/scripts scripts
+
+          # Sync workflow files
+          cp /tmp/template/.github/workflows/build-and-upload-packages.yml .github/workflows/build-and-upload-packages.yml
+          cp /tmp/template/.github/workflows/delete-packages.yml .github/workflows/delete-packages.yml
+
+          # Sync root files
+          cp /tmp/template/.gitignore .gitignore
+          cp /tmp/template/README.md README.md
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create or update sync PR
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="sync-from-template-$(date +%Y-%m-%d)"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Check if a sync PR branch already exists
+          EXISTING_PR=$(gh pr list --head "sync-from-template-" --json number --jq '.[0].number' 2>/dev/null || true)
+
+          if [ -n "$EXISTING_PR" ]; then
+            # Get the existing PR's branch name
+            BRANCH=$(gh pr view "$EXISTING_PR" --json headRefName --jq '.headRefName')
+            git checkout -B "$BRANCH"
+          else
+            git checkout -b "$BRANCH"
+          fi
+
+          git add -A
+          CHANGED_FILES=$(git diff --cached --name-only)
+          git commit -m "Sync shared infrastructure from mip-channel-template"
+
+          git push -u origin "$BRANCH" --force
+
+          BODY=$(cat <<EOF
+          Sync shared infrastructure from mip-channel-template.
+
+          Changed files:
+          $(echo "$CHANGED_FILES" | sed 's/^/- /')
+          EOF
+          )
+
+          if [ -n "$EXISTING_PR" ]; then
+            gh pr edit "$EXISTING_PR" --body "$BODY"
+          else
+            gh pr create \
+              --title "Sync shared infrastructure from mip-channel-template" \
+              --body "$BODY" \
+              --base main
+          fi
