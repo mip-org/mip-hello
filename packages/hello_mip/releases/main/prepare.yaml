@@ -1,0 +1,20 @@
+name: hello_mip
+description: "A simple test package for MIP"
+version: "main"
+dependencies: []
+homepage: "https://github.com/mip-org/hello_mip"
+repository: "https://github.com/mip-org/hello_mip"
+license: "MIT"
+
+defaults:
+  release_number: 1
+  prepare:
+    clone_git:
+      url: "https://github.com/mip-org/hello_mip"
+      destination: "hello_mip"
+      branch: "main"
+  addpaths:
+    - path: "hello_mip"
+
+builds:
+  - architectures: [any]
