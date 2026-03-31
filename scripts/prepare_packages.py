@@ -672,12 +672,15 @@ class PackagePreparer:
                     if 'compile_script' in resolved_config:
                         compile_script = resolved_config['compile_script']
                         compile_script_src = os.path.join(release_folder_path, compile_script)
+                        compile_script_in_prepared = os.path.join(output_dir_path, compile_script)
                         if os.path.exists(compile_script_src):
                             compile_script_dst = os.path.join(output_dir_path, compile_script)
                             shutil.copy2(compile_script_src, compile_script_dst)
                             print(f"  Copied compile script: {compile_script}")
+                        elif os.path.exists(compile_script_in_prepared):
+                            print(f"  Compile script found in prepared source: {compile_script}")
                         else:
-                            print(f"  Warning: compile_script '{compile_script}' not found in package directory")
+                            print(f"  Warning: compile_script '{compile_script}' not found in package directory or prepared source")
 
                     # Copy build script if specified (shell scripts)
                     if 'build_script' in resolved_config:

@@ -18,4 +18,4 @@ defaults:
 
 builds:
   - architectures: [linux_x86_64, macos_x86_64, macos_arm64]
-    compile_script: compile.m
+    compile_script: hello_mip_mex/compile.m
