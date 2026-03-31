@@ -16,9 +16,7 @@ defaults:
       branch: "main"
   addpaths:
     - path: "hello_mip_wasm/numbl"
-    - path: "hello_mip_wasm"
 
 builds:
-  - architectures: [any]
   - architectures: [numbl_wasm]
     build_script: hello_mip_wasm/numbl/build_wasm.sh
