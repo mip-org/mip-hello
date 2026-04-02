@@ -415,6 +415,7 @@ class PackagePreparer:
         Fetch source code based on recipe.yaml source specification.
 
         Clones/downloads source directly into mhl_dir.
+        Also fetches any build_sources (additional repos needed at build time).
 
         Args:
             recipe: Parsed recipe.yaml data
@@ -443,6 +444,20 @@ class PackagePreparer:
                         print(f"    Removed directory: {dir_name}")
             elif 'zip' in source:
                 download_and_extract_zip(source['zip'], '.')
+
+            # Fetch additional build-time sources
+            for build_src in recipe.get('build_sources', []):
+                if 'git' in build_src:
+                    dest = build_src.get('destination', os.path.basename(build_src['git']).replace('.git', ''))
+                    clone_git_repository(
+                        url=build_src['git'],
+                        destination=dest,
+                        subdirectory=build_src.get('subdirectory'),
+                        branch=build_src.get('branch'),
+                    )
+                elif 'zip' in build_src:
+                    dest = build_src.get('destination', 'build_source')
+                    download_and_extract_zip(build_src['zip'], dest)
         finally:
             os.chdir(original_dir)
 
@@ -590,6 +605,15 @@ class PackagePreparer:
                     commit_hash = resolve_git_commit_hash(source['git'], branch)
                     print(f"  Resolved {source['git']} {branch} -> {commit_hash[:12]}")
                     remote_commit_hashes.append(commit_hash)
+
+            # Also resolve build_sources branches
+            for build_src in recipe.get('build_sources', []):
+                if 'git' in build_src:
+                    branch = build_src.get('branch')
+                    if branch:
+                        commit_hash = resolve_git_commit_hash(build_src['git'], branch)
+                        print(f"  Resolved {build_src['git']} {branch} -> {commit_hash[:12]}")
+                        remote_commit_hashes.append(commit_hash)
 
             if remote_commit_hashes:
                 combined = hashlib.sha1()
