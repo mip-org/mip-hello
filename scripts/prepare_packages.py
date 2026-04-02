@@ -79,7 +79,17 @@ def clone_git_repository(url: str, destination: str, subdirectory: str | None = 
         if not os.path.isdir(subdir_path):
             shutil.rmtree(temp_clone_dir)
             raise ValueError(f"Subdirectory '{subdirectory}' not found in cloned repository")
-        shutil.copytree(subdir_path, destination)
+        if destination == '.':
+            # Copy contents into current directory
+            for item in os.listdir(subdir_path):
+                s = os.path.join(subdir_path, item)
+                d = os.path.join('.', item)
+                if os.path.isdir(s):
+                    shutil.copytree(s, d)
+                else:
+                    shutil.copy2(s, d)
+        else:
+            shutil.copytree(subdir_path, destination)
         shutil.rmtree(temp_clone_dir)
     else:
         branch_info = f" (branch: {branch})" if branch else ""
