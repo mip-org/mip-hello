@@ -1,0 +1,4 @@
+# hello_mip_wasm: source repo has no mip.yaml, so we provide it here
+source:
+  git: "https://github.com/mip-org/hello_mip_wasm"
+  branch: "main"

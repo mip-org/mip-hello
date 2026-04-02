@@ -1,0 +1,11 @@
+name: hello_inline
+description: "A simple package with source code hosted entirely in the channel"
+version: "main"
+license: MIT
+dependencies: []
+
+addpaths:
+  - path: "."
+
+builds:
+  - architectures: [any]

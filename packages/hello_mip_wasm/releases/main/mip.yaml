@@ -1,0 +1,16 @@
+name: hello_mip_wasm
+description: "A simple test package demonstrating WASM compilation for numbl"
+version: "main"
+license: MIT
+homepage: "https://github.com/mip-org/hello_mip_wasm"
+repository: "https://github.com/mip-org/hello_mip_wasm"
+dependencies: []
+
+addpaths:
+  - path: "numbl"
+
+symbol_extensions: [".m", ".js"]
+
+builds:
+  - architectures: [numbl_wasm]
+    build_script: numbl/build_wasm.sh

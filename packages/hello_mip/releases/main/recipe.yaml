@@ -1,0 +1,4 @@
+# hello_mip: mip.yaml lives in the source repo
+source:
+  git: "https://github.com/mip-org/hello_mip"
+  branch: "main"
