@@ -9,7 +9,7 @@ import subprocess
 
 
 def get_github_repo():
-    """Return the GitHub owner/repo string (e.g. 'mip-org/mip-example').
+    """Return the GitHub owner/repo string (e.g. 'mip-org/mip-core').
 
     Resolution order:
       1. $GITHUB_REPOSITORY  (always set in GitHub Actions)
@@ -25,16 +25,11 @@ def get_github_repo():
         capture_output=True, text=True, check=True
     )
     url = result.stdout.strip()
-    # Handle both HTTPS and SSH URLs
-    # https://github.com/owner/repo.git  ->  owner/repo
-    # git@github.com:owner/repo.git      ->  owner/repo
     if url.endswith('.git'):
         url = url[:-4]
     if '://' in url:
-        # HTTPS
         return '/'.join(url.split('/')[-2:])
     else:
-        # SSH  (git@github.com:owner/repo)
         return url.split(':')[-1]
 
 
@@ -47,20 +42,18 @@ def release_tag_from_mhl(mhl_filename):
     """Extract the release tag (name-version) from an .mhl filename.
 
     Filename format: {name}-{version}-{architecture}.mhl
-    Package names use underscores, never hyphens (enforced by prepare_packages.py),
-    so the first hyphen separates name from version, and the second separates
-    version from architecture.
-
-    Returns: "{name}-{version}" string suitable as a GitHub release tag.
+    Package names use underscores, never hyphens, so the first hyphen
+    separates name from version, and the last hyphen separates version
+    from architecture.
     """
-    # Strip .mhl or .mhl.mip.json suffix
     basename = mhl_filename
     if basename.endswith('.mip.json'):
-        basename = basename[:-9]  # remove .mip.json
+        basename = basename[:-9]
     if basename.endswith('.mhl'):
-        basename = basename[:-4]  # remove .mhl
+        basename = basename[:-4]
 
-    # Split: name-version-architecture
-    parts = basename.split('-')
-    # parts[0] = name, parts[1] = version, parts[2:] = architecture
-    return f"{parts[0]}-{parts[1]}"
+    # Split on last hyphen to get architecture, rest is name-version
+    last_hyphen = basename.rfind('-')
+    if last_hyphen == -1:
+        return basename
+    return basename[:last_hyphen]

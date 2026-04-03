@@ -13,4 +13,4 @@ symbol_extensions: [".m", ".js"]
 
 builds:
   - architectures: [numbl_wasm]
-    build_script: numbl/build_wasm.sh
+    compile_script: compile_numbl_wasm.m
