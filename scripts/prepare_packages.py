@@ -377,6 +377,13 @@ class PackagePreparer:
                 with open(hash_file, 'w') as f:
                     f.write(source_hash)
 
+                # Write raw git commit hash if available
+                if remote_hashes:
+                    commit_hash_file = os.path.join(
+                        output_path, '.commit_hash')
+                    with open(commit_hash_file, 'w') as f:
+                        f.write(remote_hashes[0])
+
                 print(f"  Prepared: {output_path}")
 
             except Exception as e:
