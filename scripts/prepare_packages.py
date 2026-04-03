@@ -330,11 +330,7 @@ class PackagePreparer:
                     shutil.rmtree(temp_dir)
 
             # Check architecture match
-            # 'any' matches when BUILD_ARCHITECTURE is linux_x86_64
-            # (to avoid duplicate builds in CI)
-            arch_matches = (self.architecture in archs or
-                           ('any' in archs and
-                            self.architecture == 'linux_x86_64'))
+            arch_matches = self.architecture in archs
 
             if not arch_matches:
                 print(f"  No builds match architecture={self.architecture}, "

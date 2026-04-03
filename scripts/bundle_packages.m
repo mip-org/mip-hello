@@ -10,6 +10,12 @@ fprintf('=== Bundle Packages ===\n');
 preparedDir = fullfile(pwd, 'build', 'prepared');
 outputDir = fullfile(pwd, 'build', 'bundled');
 
+architecture = getenv('BUILD_ARCHITECTURE');
+if isempty(architecture)
+    % err
+    error('mip:missingArchitecture', 'Environment variable BUILD_ARCHITECTURE is not set');
+end
+
 if ~exist(preparedDir, 'dir')
     fprintf('No prepared directory found at %s. Nothing to bundle.\n', preparedDir);
     return;
@@ -40,7 +46,7 @@ for i = 1:length(items)
     fprintf('\n--- Bundling: %s ---\n', items(i).name);
 
     try
-        mip.bundle(pkgDir, '--output', outputDir);
+        mip.bundle(pkgDir, '--output', outputDir, '--arch', architecture);
         bundled = bundled + 1;
     catch ME
         fprintf('Error bundling %s: %s\n', items(i).name, ME.message);
