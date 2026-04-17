@@ -178,10 +178,10 @@ def main():
     success = uploader.upload_all()
 
     if success:
-        print("\n✓ All packages uploaded successfully")
+        print("\nAll packages uploaded successfully")
         return 0
     else:
-        print("\n✗ Upload process failed")
+        print("\nUpload process failed")
         return 1
 
 

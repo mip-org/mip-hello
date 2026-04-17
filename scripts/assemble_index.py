@@ -346,7 +346,7 @@ class IndexAssembler:
             with open(index_path, 'w') as f:
                 json.dump(index_data, f, indent=2)
 
-            print(f"\n✓ Created index.json with {len(package_metadata)} package(s)")
+            print(f"\nDone: Created index.json with {len(package_metadata)} package(s)")
             print(f"  Saved to: {index_path}")
 
             # Generate and save packages.html
@@ -358,7 +358,7 @@ class IndexAssembler:
             with open(packages_html_path, 'w') as f:
                 f.write(html_content)
 
-            print(f"✓ Created packages.html")
+            print(f"Done: Created packages.html")
             print(f"  Saved to: {packages_html_path}")
             repo_name = get_github_repo().split('/')[-1]
             owner = get_github_repo().split('/')[0]
@@ -395,10 +395,10 @@ def main():
     success = assembler.assemble_index()
 
     if success:
-        print("\n✓ Index assembled successfully")
+        print("\nDone: Index assembled successfully")
         return 0
     else:
-        print("\n✗ Index assembly failed")
+        print("\nError: Index assembly failed")
         return 1
 
 

@@ -16,6 +16,7 @@ The prepared directories each contain a mip.yaml and are ready for
 
 import os
 import sys
+import stat
 import json
 import shutil
 import subprocess
@@ -24,6 +25,12 @@ import argparse
 import requests
 import yaml
 from channel_config import get_github_repo, get_base_url, release_tag_from_mhl
+
+
+def _rmtree_on_error(func, path, exc_info):
+    """Handle read-only files on Windows (e.g. .git/objects/pack)."""
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 
 def clone_git_repository(url, destination, subdirectory=None, branch=None):
@@ -39,7 +46,7 @@ def clone_git_repository(url, destination, subdirectory=None, branch=None):
         )
         subdir_path = os.path.join(temp_clone_dir, subdirectory)
         if not os.path.isdir(subdir_path):
-            shutil.rmtree(temp_clone_dir)
+            shutil.rmtree(temp_clone_dir, onerror=_rmtree_on_error)
             raise ValueError(f"Subdirectory '{subdirectory}' not found in cloned repository")
         if destination == '.':
             for item in os.listdir(subdir_path):
@@ -51,7 +58,7 @@ def clone_git_repository(url, destination, subdirectory=None, branch=None):
                     shutil.copy2(s, d)
         else:
             shutil.copytree(subdir_path, destination)
-        shutil.rmtree(temp_clone_dir)
+        shutil.rmtree(temp_clone_dir, onerror=_rmtree_on_error)
     else:
         branch_info = f" (branch: {branch})" if branch else ""
         print(f'  Cloning {url}{branch_info}...')
@@ -63,7 +70,7 @@ def clone_git_repository(url, destination, subdirectory=None, branch=None):
     # Remove .git directories
     for root, dirs, files in os.walk(destination):
         if ".git" in dirs:
-            shutil.rmtree(os.path.join(root, ".git"))
+            shutil.rmtree(os.path.join(root, ".git"), onerror=_rmtree_on_error)
             dirs.remove(".git")
 
 
@@ -239,13 +246,14 @@ class PackagePreparer:
                     subdirectory=source.get('subdirectory'),
                     branch=source.get('branch'),
                 )
-                for dir_name in source.get('remove_dirs', []):
-                    dir_path = os.path.join(target_dir, dir_name)
-                    if os.path.isdir(dir_path):
-                        shutil.rmtree(dir_path)
-                        print(f"    Removed directory: {dir_name}")
             elif 'zip' in source:
                 download_and_extract_zip(source['zip'], '.')
+
+            for dir_name in source.get('remove_dirs', []):
+                dir_path = os.path.join(target_dir, dir_name)
+                if os.path.isdir(dir_path):
+                    shutil.rmtree(dir_path, onerror=_rmtree_on_error)
+                    print(f"    Removed directory: {dir_name}")
         finally:
             os.chdir(original_dir)
 
@@ -312,7 +320,7 @@ class PackagePreparer:
                 self.output_dir,
                 f"_temp_{package_name}_{release_version}")
             if os.path.exists(temp_dir):
-                shutil.rmtree(temp_dir)
+                shutil.rmtree(temp_dir, onerror=_rmtree_on_error)
             os.makedirs(temp_dir)
 
             try:
@@ -327,7 +335,7 @@ class PackagePreparer:
                 archs, mip_yaml = read_mip_yaml_architectures(mip_yaml_path)
             finally:
                 if os.path.exists(temp_dir):
-                    shutil.rmtree(temp_dir)
+                    shutil.rmtree(temp_dir, onerror=_rmtree_on_error)
 
             # Check architecture match
             arch_matches = self.architecture in archs
@@ -363,7 +371,7 @@ class PackagePreparer:
             output_path = os.path.join(self.output_dir, output_name)
 
             if os.path.exists(output_path):
-                shutil.rmtree(output_path)
+                shutil.rmtree(output_path, onerror=_rmtree_on_error)
             os.makedirs(output_path)
 
             try:
@@ -391,7 +399,7 @@ class PackagePreparer:
                 import traceback
                 traceback.print_exc()
                 if os.path.exists(output_path):
-                    shutil.rmtree(output_path, ignore_errors=True)
+                    shutil.rmtree(output_path, onerror=_rmtree_on_error)
                 return False
 
         return True
