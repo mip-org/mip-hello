@@ -5,7 +5,7 @@ Prepare package source directories from recipe.yaml specifications.
 This script:
 1. Reads recipe.yaml files from packages/
 2. Computes source hashes for change detection
-3. Checks if the package already exists in releases (caching)
+3. Checks if the package already exists in GitHub releases (caching)
 4. Clones/downloads source code
 5. Overlays channel-provided files (mip.yaml, compile.m, etc.)
 6. Outputs prepared directories to build/prepared/
@@ -166,7 +166,7 @@ def read_mip_yaml_architectures(mip_yaml_path):
 
 
 def check_existing_package(mhl_filename, source_hash, mip_yaml):
-    """Check if package already exists in releases with matching source hash."""
+    """Check if package already exists in GitHub releases with matching source hash."""
     release_tag = release_tag_from_mhl(mhl_filename)
     base_url = get_base_url(release_tag)
     mip_json_url = f"{base_url}/{mhl_filename}.mip.json"
@@ -174,7 +174,7 @@ def check_existing_package(mhl_filename, source_hash, mip_yaml):
     try:
         response = requests.get(mip_json_url, timeout=10)
         if response.status_code == 404:
-            print(f"  Package not found in releases")
+            print(f"  Package not found in GitHub releases")
             return False
 
         response.raise_for_status()
@@ -262,29 +262,23 @@ class PackagePreparer:
         package_name = os.path.basename(package_dir)
         print(f"\nProcessing package: {package_name}")
 
-        if '-' in package_name:
-            print(f"  Error: Package name contains hyphens. Use underscores.")
+        if package_name != package_name.lower():
+            print(f"  Error: Package name must be lowercase.")
             return False
 
-        releases_path = os.path.join(package_dir, 'releases')
-        if not os.path.isdir(releases_path):
-            print(f"  No releases/ directory found")
-            return True
-
-        for release_version in sorted(os.listdir(releases_path)):
+        for release_version in sorted(os.listdir(package_dir)):
             if release is not None and release_version != release:
                 continue
 
-            release_folder = os.path.join(releases_path, release_version)
+            release_folder = os.path.join(package_dir, release_version)
             if not os.path.isdir(release_folder):
                 continue
 
-            print(f"  Processing release: {release_version}")
-
             recipe_path = os.path.join(release_folder, 'recipe.yaml')
             if not os.path.exists(recipe_path):
-                print(f"  Warning: No recipe.yaml found, skipping")
                 continue
+
+            print(f"  Processing release: {release_version}")
 
             with open(recipe_path, 'r') as f:
                 recipe = yaml.safe_load(f) or {}
@@ -351,9 +345,12 @@ class PackagePreparer:
             else:
                 effective_arch = 'any'
 
-            # Build the .mhl filename for cache check
+            # Build the .mhl filename for cache check. Canonical package
+            # names may contain '-', but the filename uses '-' as a field
+            # separator, so encode the name with '_' in the filename.
             version = mip_yaml.get('version', release_version)
-            mhl_filename = (f"{mip_yaml['name']}-{version}-"
+            name_for_filename = mip_yaml['name'].replace('-', '_')
+            mhl_filename = (f"{name_for_filename}-{version}-"
                             f"{effective_arch}.mhl")
 
             # Check cache
