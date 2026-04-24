@@ -6,7 +6,7 @@ homepage: "https://github.com/mip-org/hello_mip_wasm"
 repository: "https://github.com/mip-org/hello_mip_wasm"
 dependencies: []
 
-addpaths:
+paths:
   - path: "numbl"
 
 symbol_extensions: [".m", ".js"]
