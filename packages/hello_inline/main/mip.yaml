@@ -4,7 +4,7 @@ version: "main"
 license: MIT
 dependencies: []
 
-addpaths:
+paths:
   - path: "."
 
 builds:
