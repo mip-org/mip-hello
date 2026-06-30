@@ -1,0 +1,23 @@
+name: Build request
+
+# Thin caller. Issue-driven build trigger: an issue titled `build ...` listing
+# (package, architecture) pairs dispatches builds on admin approval. The logic
+# (issue parsing, validation, approval gate, dispatch) lives in the reusable
+# workflow in mip-org/mip_channel_tools; edit the `@ref` on the `uses:` line to
+# run against a different tooling branch.
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  actions: write
+  contents: read
+
+jobs:
+  build-request:
+    uses: mip-org/mip_channel_tools/.github/workflows/build-request.yml@main
+    secrets: inherit

@@ -1,0 +1,24 @@
+name: Scheduled rebuild
+
+# Thin caller. Daily probe of every (package, architecture) pair; dispatches a
+# build for any that are missing or out of date. The logic lives in the
+# reusable workflow in mip-org/mip_channel_tools; edit the `@ref` on the `uses:`
+# line to run against a different tooling branch.
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: scheduled-build
+  cancel-in-progress: false
+
+jobs:
+  probe-and-dispatch:
+    uses: mip-org/mip_channel_tools/.github/workflows/scheduled-build.yml@main
+    secrets: inherit
