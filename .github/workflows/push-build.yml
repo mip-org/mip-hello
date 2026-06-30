@@ -1,0 +1,19 @@
+name: Auto-build on push
+
+# Thin caller. Pushes to `main` dispatch a build for every (package,
+# architecture) pair affected by the push. The logic lives in the reusable
+# workflow in mip-org/mip_channel_tools; edit the `@ref` on the `uses:` line to
+# run against a different tooling branch.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  dispatch:
+    uses: mip-org/mip_channel_tools/.github/workflows/push-build.yml@main
+    secrets: inherit
