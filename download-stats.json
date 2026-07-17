@@ -1,7 +1,7 @@
 {
-  "generated": "2026-07-16T08:40:44Z",
+  "generated": "2026-07-17T08:34:05Z",
   "repo": "mip-org/mip-hello",
-  "total_lifetime_downloads": 246,
+  "total_lifetime_downloads": 272,
   "assets": {
     "hello_inline-main/hello_inline-main-any.mhl": {
       "lifetime": 0,
@@ -10,16 +10,16 @@
       "asset_id": 462231600,
       "created_at": "2026-06-30T14:31:36Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-07-16T08:40:44Z"
+      "updated": "2026-07-17T08:34:05Z"
     },
     "hello_mip-main/hello_mip-main-any.mhl": {
-      "lifetime": 245,
+      "lifetime": 271,
       "base": 0,
-      "last_raw": 245,
+      "last_raw": 271,
       "asset_id": 463052048,
       "created_at": "2026-07-01T09:32:00Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-07-16T08:40:44Z"
+      "updated": "2026-07-17T08:34:05Z"
     },
     "hello_mip_mex-main/hello_mip_mex-main-linux_x86_64.mhl": {
       "lifetime": 0,
@@ -28,7 +28,7 @@
       "asset_id": 407454675,
       "created_at": "2026-04-28T14:30:10Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-07-16T08:40:44Z"
+      "updated": "2026-07-17T08:34:05Z"
     },
     "hello_mip_mex-main/hello_mip_mex-main-macos_arm64.mhl": {
       "lifetime": 1,
@@ -37,7 +37,7 @@
       "asset_id": 407455341,
       "created_at": "2026-04-28T14:31:13Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-07-16T08:40:44Z"
+      "updated": "2026-07-17T08:34:05Z"
     },
     "hello_mip_mex-main/hello_mip_mex-main-macos_x86_64.mhl": {
       "lifetime": 0,
@@ -46,7 +46,7 @@
       "asset_id": 401138101,
       "created_at": "2026-04-21T00:10:02Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-07-16T08:40:44Z"
+      "updated": "2026-07-17T08:34:05Z"
     },
     "hello_mip_wasm-main/hello_mip_wasm-main-numbl_wasm.mhl": {
       "lifetime": 0,
@@ -55,7 +55,7 @@
       "asset_id": 462231783,
       "created_at": "2026-06-30T14:31:52Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-07-16T08:40:44Z"
+      "updated": "2026-07-17T08:34:05Z"
     }
   }
 }
