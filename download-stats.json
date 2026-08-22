@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-21T07:23:19Z",
+  "generated": "2026-08-22T07:09:00Z",
   "repo": "mip-org/mip-hello",
   "total_lifetime_downloads": 360,
   "assets": {
@@ -10,7 +10,7 @@
       "asset_id": 462231600,
       "created_at": "2026-06-30T14:31:36Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-08-21T07:23:19Z"
+      "updated": "2026-08-22T07:09:00Z"
     },
     "hello_mip-main/hello_mip-main-any.mhl": {
       "lifetime": 358,
@@ -19,7 +19,7 @@
       "asset_id": 463052048,
       "created_at": "2026-07-01T09:32:00Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-08-21T07:23:19Z"
+      "updated": "2026-08-22T07:09:00Z"
     },
     "hello_mip_mex-main/hello_mip_mex-main-linux_x86_64.mhl": {
       "lifetime": 0,
@@ -28,7 +28,7 @@
       "asset_id": 407454675,
       "created_at": "2026-04-28T14:30:10Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-08-21T07:23:19Z"
+      "updated": "2026-08-22T07:09:00Z"
     },
     "hello_mip_mex-main/hello_mip_mex-main-macos_arm64.mhl": {
       "lifetime": 1,
@@ -37,7 +37,7 @@
       "asset_id": 407455341,
       "created_at": "2026-04-28T14:31:13Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-08-21T07:23:19Z"
+      "updated": "2026-08-22T07:09:00Z"
     },
     "hello_mip_mex-main/hello_mip_mex-main-macos_x86_64.mhl": {
       "lifetime": 0,
@@ -46,7 +46,7 @@
       "asset_id": 401138101,
       "created_at": "2026-04-21T00:10:02Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-08-21T07:23:19Z"
+      "updated": "2026-08-22T07:09:00Z"
     },
     "hello_mip_wasm-main/hello_mip_wasm-main-numbl_wasm.mhl": {
       "lifetime": 0,
@@ -55,7 +55,7 @@
       "asset_id": 462231783,
       "created_at": "2026-06-30T14:31:52Z",
       "first_seen": "2026-07-01T10:29:40Z",
-      "updated": "2026-08-21T07:23:19Z"
+      "updated": "2026-08-22T07:09:00Z"
     }
   }
 }
